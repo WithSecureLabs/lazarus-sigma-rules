@@ -1,0 +1,42 @@
+title: Mshta suspicious bitly URL
+status: experimental
+description: Detects suspicious non-browser attempts to access suspicious URL
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical 
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic
+author: F-Secure Countercept
+date: 2020/09/25
+level: high
+
+logsource:
+    category: process_creation
+    product: windows
+
+detection:
+    selection1:
+        Image|endswith: 
+                - '\chrome.exe'
+                - '\firefox.exe'
+                - '\microsoftedgecp.exe'
+                - '\microsoftedgecp64.exe'
+                - '\microsoftedge.exe'
+                - '\edge.exe'
+                - '\opera.exe'
+                - '\ucbrowser.exe'
+    selection2:
+        CommandLine|contains:
+                - 'bit.ly'
+                - 'ghostbin.com'
+                - 'pastebin.com'
+                - 'hastebin.com'
+                - 'write.as'
+                - 'privatebin.net'
+                - 'rentry.co'
+                - '0bin.net'
+                - 'github.com'
+
+    condition: selection2 AND NOT selection1
+
+falsepositives:
+    - Unknown
+

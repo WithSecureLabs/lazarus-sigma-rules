@@ -1,0 +1,27 @@
+title: Word document creating anomalous shortcut file
+status: experimental
+description: Detects the creation of anomalous shortcut file by Word document
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic
+author: F-Secure Countercept 
+date: 2020/09/25
+level: high
+
+logsource:
+    category: file_event
+    product: windows
+
+detection:
+    selection1:
+        Image: '*\winword.exe'
+        TargetFileName: '*.lnk'
+    selection2:
+        TargetFileName|contains:
+            - '\Roaming\Microsoft\Office\Recent\'
+            - '\AppData\Roaming\Microsoft\Word\'
+    condition: selection1 and not selection2
+
+falsepositives:
+    - Activity from legitimate macro-enabled Word documents, varies across estates
+

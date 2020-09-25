@@ -1,0 +1,31 @@
+title: Powershell disable Windows Defender
+status: experimental
+description: Detects Powershell command used to disable Window Defender
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical 
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic
+author: F-Secure Countercept
+date: 2020/09/25
+level: high
+
+logsource:
+    category: process_creation
+    product: windows
+    
+detection:
+    selection1:
+        Image: '*\powershell.exe'
+        CommandLine|contains:
+            - 'DisableRealtimeMonitoring'
+            - 'DisableBehaviorMonitoring'
+    selection2:
+        ParentImage|re: '.*\\PyCharm.*\\bin\\pycharm64\.exe'
+    selection3:
+        ParentImage|re: '.*\\JetBrains*\\.*\.exe'
+
+    condition: selection1 and not (selection2 or selection3)
+
+falsepositives:
+    - Unlikely after filtering out false positives caused by Jetbrains IDEs
+
+

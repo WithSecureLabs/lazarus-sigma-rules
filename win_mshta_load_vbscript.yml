@@ -1,0 +1,23 @@
+title: Mshta executing VBScript
+status: experimental
+description: Detects suspicious mshta.exe execution of vbscript
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical 
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic 
+author: F-Secure Countercept
+date: 2020/09/25
+level: medium
+
+logsource:
+    category: image_load
+    product: windows
+
+detection:
+    selection:
+        Image: '*\mshta.exe'
+        ImageLoaded: '*\vbscript.dll'
+    condition: selection
+
+falsepositives:
+    - Unknown
+
