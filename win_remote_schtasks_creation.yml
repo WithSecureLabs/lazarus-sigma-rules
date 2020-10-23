@@ -1,0 +1,26 @@
+title: Remote scheduled task creation
+status: experimental
+description: Detects the creation of scheduled task on remote endpoints as part of lateral movement
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
+author: F-Secure Countercept 
+date: 2020/09/25
+level: high
+
+logsource:
+    category: process_creation
+    product: windows
+
+detection:
+    selection:
+        Image: '*\schtasks.exe'
+        CommandLine|contains: 
+            - '/s'
+            - '/u'
+            - '/p'
+    condition: selection
+
+falsepositives:
+    - Administrative activity
+

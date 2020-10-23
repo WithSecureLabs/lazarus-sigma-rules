@@ -1,0 +1,30 @@
+title: Modifying registy to enable WDigest
+status: experimental
+description: Detects the enumeration or modification of WDigest plaintext credential caching registry entry
+author: F-Secure Countercept
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical 
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
+date: 2020/09/25
+level: critical
+
+logsource:
+    category: registry_event, process_creation
+    product: windows
+
+detection:
+    selection1:        
+        TargetObject: 'HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest\UseLogonCredential'
+        EventType: 
+            - 'SetValue'
+            - 'AddValue'
+        Details: 'DWORD (0x00000001)'
+
+    selection2:
+        Image: '*\reg.exe'
+        CommandLine|contains: 'UseLogonCredential'
+    
+    condition: selection1 or selection2
+
+falsepositives:
+    - Very few FP, mainly on selection2 caused vulnerability management / hardening scripts, the rule can be easily modified either to only have a focus on enabling wdigest, or to whitelist the scripts that cause the false positives.

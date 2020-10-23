@@ -1,0 +1,24 @@
+title: Execution ProgramData folder
+status: experimental
+description: Detects a suspicious execution from the unusual folder ProgramData
+references: https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
+author: F-Secure Countercept
+date: 2020/09/25
+tags:
+   - attack.defense_evasion
+   - attack.t1036
+level: high
+
+logsource:
+   category: process_creation
+   product: windows
+detection:
+   selection:
+       ParentImage|re: 'C:\\ProgramData\\[^\\]*\.exe'
+   condition: selection
+fields:
+   - CommandLine
+   - ParentCommandLine
+falsepositives:
+   - Unlikely
+

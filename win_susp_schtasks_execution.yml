@@ -1,0 +1,40 @@
+title: Suspicious process from schedule task
+status: experimental
+description: Detects the execution of suspicious process from schedule task
+references:
+    - https://labs.f-secure.com/publications/ti-report-lazarus-group-cryptocurrency-vertical
+    - https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
+author: F-Secure Countercept
+date: 2020/09/25
+level: high
+
+logsource:
+    category: process_creation
+    product: windows
+
+detection:
+    selection1:
+        ParentImage: '*\svchost.exe'
+        CommandLine|contains:
+         - '-k netsvcs -s Schedule' #newer version windows like Windows 10, Server 2016
+         - '-k netsvcs -p -s Schedule' #newer version windows like Windows 10, Server 2016
+    selection2:
+        ParentImage: '*\taskeng.exe' #older version windows like Windows 7, Server 2012
+    selection3:
+        Image:
+         - 'cmd.exe'
+         - 'powershell.exe'
+         - 'reg.exe'
+         - 'wscript.exe'
+         - 'cscript.exe'
+         - 'mshta.exe'
+         - 'python.exe'
+    selection4: #put false positive here
+         CommandLine|contains:
+         - 'hklm\SOFTWARE\Lenovo\SystemUpdatePlugin\scheduler'
+
+    condition: (selection1 OR selection2) AND selection3 AND NOT selection4
+
+falsepositives:
+    - administrative scripts that run regularly in the environment by schedule task. identify and exclude them in selection4.
+    - reg.exe seen on Lenovo SystemUpdatePlugin
