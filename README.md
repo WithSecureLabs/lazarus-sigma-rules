@@ -4,8 +4,8 @@ The Sigma rules in this repository were created by the F-Secure Countercept Dete
 
 The blog posts discussing the creation of these Sigma rules can be found here: 
 
-https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic
-https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
+- https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic
+- https://labs.f-secure.com/blog/catching-lazarus-threat-intelligence-to-real-detection-logic-part-two
 
 ## Detection Rules
 
